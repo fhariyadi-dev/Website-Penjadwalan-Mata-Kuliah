@@ -1,0 +1,225 @@
+/* --- file: style.css --- */
+/* Reset & Variabel Warna */
+:root {
+    --primary-blue: #1E3A8A;
+    --primary-hover: #172a6b;
+    --bg-light: #F3F4F6;
+    --surface-white: #FFFFFF;
+    --text-dark: #333333;
+    --text-muted: #6b7280;
+    --border-color: #e5e7eb;
+    --danger-color: #dc2626;
+    --danger-hover: #b91c1c;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: var(--bg-light);
+    color: var(--text-dark);
+}
+
+/* Utilities */
+.page-container {
+    width: 100%;
+    height: 100vh;
+}
+.w-100 { width: 100%; }
+.mt-15 { margin-top: 15px; }
+
+.card {
+    background-color: var(--surface-white);
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    padding: 24px;
+}
+
+/* Button Styles */
+.btn {
+    padding: 10px 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+}
+.btn:active { transform: scale(0.98); }
+.btn-primary {
+    background-color: var(--primary-blue);
+    color: var(--surface-white);
+}
+.btn-primary:hover { background-color: var(--primary-hover); }
+.btn-danger {
+    background-color: var(--danger-color);
+    color: var(--surface-white);
+}
+.btn-danger:hover { background-color: var(--danger-hover); }
+
+/* Form Styles */
+.form-group {
+    margin-bottom: 16px;
+}
+.form-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-dark);
+}
+.form-group input, .form-group select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.3s;
+}
+.form-group input:focus, .form-group select:focus {
+    border-color: var(--primary-blue);
+}
+
+/* --- Layout Login --- */
+#login-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.login-card {
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+.login-card h2 { color: var(--primary-blue); margin-bottom: 5px; }
+.login-card p { color: var(--text-muted); margin-bottom: 24px; font-size: 14px;}
+.login-card form { text-align: left; }
+
+/* --- Layout Dashboard (SPA) --- */
+#dashboard-page {
+    display: flex;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 260px;
+    background-color: var(--primary-blue);
+    color: var(--surface-white);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+}
+.sidebar-header {
+    padding: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+.nav-menu {
+    list-style: none;
+    margin-top: 10px;
+}
+.nav-link {
+    display: block;
+    padding: 15px 20px;
+    color: var(--surface-white);
+    text-decoration: none;
+    font-size: 15px;
+    transition: background-color 0.3s, padding-left 0.3s;
+}
+.nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    padding-left: 25px;
+}
+.nav-link.active {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-left: 4px solid var(--surface-white);
+    font-weight: 600;
+}
+
+/* Main Content */
+.main-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+.topbar {
+    height: 70px;
+    background-color: var(--surface-white);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 30px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+.topbar-title {
+    font-weight: 600;
+    color: var(--text-dark);
+}
+.content-area {
+    padding: 30px;
+}
+
+/* Tab Management */
+.tab-content { display: none; }
+.tab-content.active { display: block; animation: fadeIn 0.4s ease-in-out; }
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Table Design */
+.table-responsive {
+    overflow-x: auto;
+}
+.schedule-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.schedule-table th, .schedule-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+.schedule-table th {
+    background-color: var(--primary-blue);
+    color: var(--surface-white);
+    font-weight: 600;
+}
+/* Zebra Striping */
+.schedule-table tbody tr:nth-child(even) {
+    background-color: #f8fafc;
+}
+.schedule-table tbody tr:hover {
+    background-color: #e2e8f0;
+}
+
+/* Loading & Spinner CSS */
+#loading-container {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    background: #e0f2fe;
+    border: 1px solid #bae6fd;
+    border-radius: 6px;
+    color: #0369a1;
+    font-weight: 500;
+}
+.spinner {
+    width: 24px;
+    height: 24px;
+    border: 3px solid rgba(3, 105, 161, 0.3);
+    border-top-color: #0369a1;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}

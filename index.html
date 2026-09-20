@@ -1,0 +1,138 @@
+<!-- --- file: index.html --- -->
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Penjadwalan Mata Kuliah - Algoritma Genetika</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- HALAMAN LOGIN -->
+    <div id="login-page" class="page-container">
+        <div class="card login-card">
+            <h2>Sistem Penjadwalan</h2>
+            <p>Berbasis Algoritma Genetika</p>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" placeholder="Masukkan username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="Masukkan password" required>
+                </div>
+                <div class="form-group">
+                    <label for="role">Peran</label>
+                    <select id="role" required>
+                        <option value="Admin">Admin</option>
+                        <option value="Dosen">Dosen</option>
+                        <option value="Mahasiswa">Mahasiswa</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Login</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- HALAMAN DASHBOARD -->
+    <div id="dashboard-page" class="page-container" style="display: none;">
+        
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h3>GA SchedulePanel</h3>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#" class="nav-link active" data-target="kelola-data">Kelola Data</a></li>
+                <li><a href="#" class="nav-link" data-target="proses-ga">Proses Algoritma Genetika</a></li>
+                <li><a href="#" class="nav-link" id="nav-hasil" data-target="hasil-jadwal">Hasil Jadwal</a></li>
+            </ul>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+            
+            <!-- TOPBAR -->
+            <header class="topbar">
+                <div class="topbar-title">
+                    <span id="welcome-text">Selamat datang, Admin</span>
+                </div>
+                <button id="logout-btn" class="btn btn-danger">Logout</button>
+            </header>
+
+            <!-- KONTEN DINAMIS -->
+            <div class="content-area">
+                
+                <!-- TAB 1: KELOLA DATA -->
+                <div id="kelola-data" class="tab-content active card">
+                    <h2>Kelola Data Master</h2>
+                    <p>Form input data Dosen, Ruangan, dan Mata Kuliah.</p>
+                    <div class="form-group mt-15">
+                        <label>Nama Mata Kuliah</label>
+                        <input type="text" placeholder="Contoh: Pemrograman Berorientasi Objek">
+                    </div>
+                    <div class="form-group">
+                        <label>Dosen Pengampu</label>
+                        <input type="text" placeholder="Nama Dosen">
+                    </div>
+                    <button class="btn btn-primary">Simpan Data (Dummy)</button>
+                </div>
+
+                <!-- TAB 2: PROSES ALGORITMA GENETIKA -->
+                <div id="proses-ga" class="tab-content card">
+                    <h2>Proses Penjadwalan Algoritma Genetika</h2>
+                    <p>Atur parameter algoritma sebelum memulai evolusi jadwal.</p>
+                    <div class="ga-parameters mt-15">
+                        <div class="form-group">
+                            <label>Ukuran Populasi</label>
+                            <input type="number" id="populasi" value="80" min="10">
+                        </div>
+                        <div class="form-group">
+                            <label>Probabilitas Crossover</label>
+                            <input type="number" step="0.1" id="crossover" value="0.4" min="0" max="1">
+                        </div>
+                        <div class="form-group">
+                            <label>Probabilitas Mutasi</label>
+                            <input type="number" step="0.001" id="mutasi" value="0.001" min="0" max="1">
+                        </div>
+                    </div>
+                    <button id="btn-proses-ga" class="btn btn-primary mt-15">Mulai Proses Penjadwalan</button>
+
+                    <!-- Animasi Loading (Disembunyikan) -->
+                    <div id="loading-container" style="display: none;">
+                        <div class="spinner"></div>
+                        <p class="loading-text">Mengevaluasi Fitness... Menghindari Bentrok...</p>
+                    </div>
+                </div>
+
+                <!-- TAB 3: HASIL JADWAL -->
+                <div id="hasil-jadwal" class="tab-content card">
+                    <h2>Hasil Penjadwalan Terbaik</h2>
+                    <p>Jadwal perkuliahan yang telah dioptimasi bebas dari konflik ruangan dan dosen.</p>
+                    <div class="table-responsive mt-15">
+                        <table class="schedule-table">
+                            <thead>
+                                <tr>
+                                    <th>Hari</th>
+                                    <th>Jam</th>
+                                    <th>Ruang</th>
+                                    <th>Mata Kuliah</th>
+                                    <th>Dosen</th>
+                                </tr>
+                            </thead>
+                            <tbody id="schedule-tbody">
+                                <!-- Data akan dirender oleh JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
