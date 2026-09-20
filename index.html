@@ -1,138 +1,167 @@
-<!-- --- file: index.html --- -->
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Penjadwalan Mata Kuliah - Algoritma Genetika</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EduSched - Sistem Informasi Akademik</title>
+  <!-- Menambahkan ?v=3 untuk bypass cache browser -->
+  <link rel="stylesheet" href="style.css?v=3">
+  
+  <!-- FIREBASE SDK (Cukup dipanggil sekali di head) -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 </head>
-<body>
+<body> <!-- Tag pembuka body ditambahkan di sini -->
 
-    <!-- HALAMAN LOGIN -->
-    <div id="login-page" class="page-container">
-        <div class="card login-card">
-            <h2>Sistem Penjadwalan</h2>
-            <p>Berbasis Algoritma Genetika</p>
-            <form id="login-form">
-                <div class="form-group">
-                    <label for="username">Username</label>
-                    <input type="text" id="username" placeholder="Masukkan username" required>
-                </div>
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" placeholder="Masukkan password" required>
-                </div>
-                <div class="form-group">
-                    <label for="role">Peran</label>
-                    <select id="role" required>
-                        <option value="Admin">Admin</option>
-                        <option value="Dosen">Dosen</option>
-                        <option value="Mahasiswa">Mahasiswa</option>
-                    </select>
-                </div>
-                <button type="submit" class="btn btn-primary w-100">Login</button>
-            </form>
+  <!-- HALAMAN LOGIN -->
+<!-- HALAMAN LOGIN -->
+  <section id="loginPage" class="login-page">
+    <div class="login-card">
+      <div class="login-logo">🎓</div>
+      <h1>EduSched</h1>
+      <p>Sistem Informasi Akademik</p>
+
+      <form id="loginForm">
+        <label>Username</label>
+        <input type="text" id="username" placeholder="Masukkan username" required>
+
+        <label>Password</label>
+        <input type="password" id="password" placeholder="Masukkan password" required>
+
+        <button type="submit" class="btn primary full">Masuk</button>
+      </form>
+
+      <p id="loginMessage" class="message"></p>
+    </div>
+  </section>
+
+  <!-- APLIKASI -->
+  <section id="appPage" class="app hidden">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-icon">🎓</div>
+        <div>
+          <b>EduSched</b>
+          <small>Academic Portal</small>
         </div>
+      </div>
+
+      <nav id="menu"></nav>
+
+      <button id="logoutButton" class="logout-button">
+        🚪 Sign Out
+      </button>
+    </aside>
+
+    <main class="main-content">
+      <<header class="topbar">
+        <!-- Tambahan div untuk membungkus tombol toggle dan judul -->
+        <div style="display: flex; align-items: center; gap: 16px;">
+          <button id="sidebarToggle" class="sidebar-toggle">☰</button>
+          <div>
+            <h2 id="pageTitle">Dashboard</h2>
+            <p id="pageSubtitle">Ringkasan akademik</p>
+          </div>
+        </div>
+
+        <div class="user-info">
+          <div id="userAvatar" class="avatar">U</div>
+          <div>
+            <b id="userName">User</b>
+            <small id="userRole">Role</small>
+          </div>
+        </div>
+      </header>
+
+      <div id="content"></div>
+    </main>
+  </section>
+
+
+
+  <!-- MODAL -->
+  <div id="modal" class="modal hidden">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 id="modalTitle">Tambah Data</h3>
+        <button id="closeModal" class="close-button">×</button>
+      </div>
+
+      <form id="dataForm">
+        <div id="formFields"></div>
+        <button type="submit" class="btn primary full">Simpan Data</button>
+      </form>
     </div>
+  </div>
 
-    <!-- HALAMAN DASHBOARD -->
-    <div id="dashboard-page" class="page-container" style="display: none;">
-        
-        <!-- SIDEBAR -->
-        <aside class="sidebar">
-            <div class="sidebar-header">
-                <h3>GA SchedulePanel</h3>
-            </div>
-            <ul class="nav-menu">
-                <li><a href="#" class="nav-link active" data-target="kelola-data">Kelola Data</a></li>
-                <li><a href="#" class="nav-link" data-target="proses-ga">Proses Algoritma Genetika</a></li>
-                <li><a href="#" class="nav-link" id="nav-hasil" data-target="hasil-jadwal">Hasil Jadwal</a></li>
-            </ul>
-        </aside>
 
-        <!-- MAIN CONTENT -->
-        <main class="main-content">
-            
-            <!-- TOPBAR -->
-            <header class="topbar">
-                <div class="topbar-title">
-                    <span id="welcome-text">Selamat datang, Admin</span>
-                </div>
-                <button id="logout-btn" class="btn btn-danger">Logout</button>
-            </header>
-
-            <!-- KONTEN DINAMIS -->
-            <div class="content-area">
-                
-                <!-- TAB 1: KELOLA DATA -->
-                <div id="kelola-data" class="tab-content active card">
-                    <h2>Kelola Data Master</h2>
-                    <p>Form input data Dosen, Ruangan, dan Mata Kuliah.</p>
-                    <div class="form-group mt-15">
-                        <label>Nama Mata Kuliah</label>
-                        <input type="text" placeholder="Contoh: Pemrograman Berorientasi Objek">
-                    </div>
-                    <div class="form-group">
-                        <label>Dosen Pengampu</label>
-                        <input type="text" placeholder="Nama Dosen">
-                    </div>
-                    <button class="btn btn-primary">Simpan Data (Dummy)</button>
-                </div>
-
-                <!-- TAB 2: PROSES ALGORITMA GENETIKA -->
-                <div id="proses-ga" class="tab-content card">
-                    <h2>Proses Penjadwalan Algoritma Genetika</h2>
-                    <p>Atur parameter algoritma sebelum memulai evolusi jadwal.</p>
-                    <div class="ga-parameters mt-15">
-                        <div class="form-group">
-                            <label>Ukuran Populasi</label>
-                            <input type="number" id="populasi" value="80" min="10">
-                        </div>
-                        <div class="form-group">
-                            <label>Probabilitas Crossover</label>
-                            <input type="number" step="0.1" id="crossover" value="0.4" min="0" max="1">
-                        </div>
-                        <div class="form-group">
-                            <label>Probabilitas Mutasi</label>
-                            <input type="number" step="0.001" id="mutasi" value="0.001" min="0" max="1">
-                        </div>
-                    </div>
-                    <button id="btn-proses-ga" class="btn btn-primary mt-15">Mulai Proses Penjadwalan</button>
-
-                    <!-- Animasi Loading (Disembunyikan) -->
-                    <div id="loading-container" style="display: none;">
-                        <div class="spinner"></div>
-                        <p class="loading-text">Mengevaluasi Fitness... Menghindari Bentrok...</p>
-                    </div>
-                </div>
-
-                <!-- TAB 3: HASIL JADWAL -->
-                <div id="hasil-jadwal" class="tab-content card">
-                    <h2>Hasil Penjadwalan Terbaik</h2>
-                    <p>Jadwal perkuliahan yang telah dioptimasi bebas dari konflik ruangan dan dosen.</p>
-                    <div class="table-responsive mt-15">
-                        <table class="schedule-table">
-                            <thead>
-                                <tr>
-                                    <th>Hari</th>
-                                    <th>Jam</th>
-                                    <th>Ruang</th>
-                                    <th>Mata Kuliah</th>
-                                    <th>Dosen</th>
-                                </tr>
-                            </thead>
-                            <tbody id="schedule-tbody">
-                                <!-- Data akan dirender oleh JavaScript -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-            </div>
-        </main>
+  <!-- CUSTOM RESET MODAL -->
+  <div id="resetModal" class="modal hidden" style="z-index: 110;">
+    <div class="modal-box" style="max-width: 400px; text-align: center; padding: 40px 30px;">
+      <div style="font-size: 48px; margin-bottom: 15px;">⚠️</div>
+      <h3 style="font-size: 20px; font-weight: 700; color: #0f172a; margin-bottom: 10px;">Reset Sistem</h3>
+      <p style="color: #64748b; font-size: 14px; margin-bottom: 30px;">PERINGATAN: Hapus SELURUH data database? Anda akan tetap login sebagai Admin.</p>
+      
+      <div style="display: flex; gap: 12px; justify-content: center;">
+        <button id="cancelResetBtn" class="btn secondary" style="width: 120px;">Batal</button>
+        <button id="confirmResetBtn" class="btn danger" style="width: 120px;">Ya, Reset</button>
+      </div>
     </div>
+  </div>
 
-    <script src="script.js"></script>
+<!-- CUSTOM CONFIRM MODAL (PENGGANTI ALERT BAWAAN BROWSER) -->
+  <div id="confirmModal" class="modal hidden" style="z-index: 100;">
+    <div class="modal-box" style="max-width: 400px; text-align: center; padding: 40px 30px;">
+      <div style="font-size: 48px; margin-bottom: 15px;">⚠️</div>
+      <h3 style="font-size: 20px; font-weight: 700; color: #0f172a; margin-bottom: 10px;">Konfirmasi Hapus</h3>
+      <p style="color: #64748b; font-size: 14px; margin-bottom: 30px;">Apakah Anda yakin ingin menghapus data ini? Tindakan ini tidak dapat dibatalkan.</p>
+      
+      <div style="display: flex; gap: 12px; justify-content: center;">
+        <button id="cancelDeleteBtn" class="btn secondary" style="width: 120px;">Batal</button>
+        <button id="confirmDeleteBtn" class="btn danger" style="width: 120px;">Ya, Hapus</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CUSTOM ALERT MODAL (PENGGANTI ALERT() SAAT AKUN DIHAPUS) -->
+  <div id="alertModal" class="modal hidden" style="z-index: 110;">
+    <div class="modal-box" style="max-width: 400px; text-align: center; padding: 40px 30px;">
+      <div style="font-size: 48px; margin-bottom: 15px;">🔒</div>
+      <h3 style="font-size: 20px; font-weight: 700; color: #0f172a; margin-bottom: 10px;">Sesi Berakhir</h3>
+      <p id="alertMessage" style="color: #64748b; font-size: 14px; margin-bottom: 30px;">Akun Anda telah dihapus oleh Administrator. Sesi Anda akan diakhiri.</p>
+      
+      <button id="alertOkBtn" class="btn primary" style="width: 100%;">OK</button>
+    </div>
+  </div>
+
+<!-- CUSTOM ALERT MODAL (PENGGANTI ALERT() SAAT AKUN DIHAPUS) -->
+  <div id="alertModal" class="modal hidden" style="z-index: 110;">
+    <div class="modal-box" style="max-width: 400px; text-align: center; padding: 40px 30px;">
+      <div style="font-size: 48px; margin-bottom: 15px;">🔒</div>
+      <h3 style="font-size: 20px; font-weight: 700; color: #0f172a; margin-bottom: 10px;">Sesi Berakhir</h3>
+      <p id="alertMessage" style="color: #64748b; font-size: 14px; margin-bottom: 30px;">Akun Anda telah dihapus oleh Administrator. Sesi Anda akan diakhiri.</p>
+      
+      <button id="alertOkBtn" class="btn primary" style="width: 100%;">OK</button>
+    </div>
+  </div>
+
+  
+
+  <div id="toast" class="toast"></div>
+
+  <!-- Skrip Websitemu (Cukup dipanggil sekali di paling bawah sebelum tutup body) -->
+  <script src="script.js?v=3"></script>
 </body>
 </html>
+
+<aside class="sidebar">
+  <ul class="menu">
+
+    <!-- Hanya Admin dan Editor -->
+    <li data-roles="admin,editor"><a href="#articles">Kelola Artikel</a></li>
+
+    <!-- Khusus Admin -->
+    <li data-roles="admin"><a href="#users">Manajemen User</a></li>
+    <li data-roles="admin"><a href="#settings">Pengaturan Sistem</a></li>
+  </ul>
+</aside>
