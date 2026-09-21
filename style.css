@@ -13,6 +13,48 @@
   --success: #10b981;
 }
 
+
+/* 1. KUNCI FONDASI LAYAR & HILANGKAN SCROLL BROWSER LUAR */
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden; /* Mengunci layar agar tidak bisa bocor ke bawah */
+  background-color: #f8fafc;
+}
+
+/* 2. PASTIKAN CLASS HIDDEN BENAR-BENAR HILANG 100% */
+.hidden {
+  display: none !important;
+}
+
+/* 3. TATA LETAK APLIKASI (SIDEBAR + KONTEN) */
+#appPage {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+/* 4. KUNCI SIDEBAR AGAR PAS 1 LAYAR */
+.sidebar {
+  width: 260px;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #0f172a;
+  /* Hapus overflow: hidden di sini jika sebelumnya ada */
+}
+
+/* 5. AREA KONTEN (HANYA BAGIAN INI YANG BOLEH DI-SCROLL) */
+.main-content {
+  flex: 1;
+  height: 100vh;
+  overflow-y: auto; /* Scrollbar hanya muncul di area kanan ini */
+  padding: 24px;
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -746,4 +788,150 @@ table tbody tr:hover {
   overflow: hidden;
   text-overflow: ellipsis;
   font-style: italic;
+}
+
+/* Memastikan sidebar menggunakan flexbox kolom penuh */
+/* Kunci Sidebar agar tingginya pas 1 layar dan menempel saat di-scroll */
+.sidebar {
+  position: sticky;
+  top: 0;
+  height: 100vh; /* Tinggi wajib persis 1 layar penuh */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* Mencegah elemen di dalamnya melar tak terbatas */
+}
+
+/* Biarkan menu mengambil sisa ruang, dan bisa discroll secara mandiri jika menu terlalu panjang */
+.sidebar ul, .sidebar .menu-container {
+  flex: 1;
+  overflow-y: auto; 
+  margin-bottom: 20px;
+}
+
+/* Mendorong tombol Sign Out ke paling bawah */
+#logoutButton {
+  margin-top: auto;
+  margin-bottom: 24px; /* Memberi jarak sedikit dari lantai layar */
+}
+
+/* ==========================================
+   DESAIN TOMBOL SIGN OUT DI SIDEBAR
+   ========================================== */
+.btn-logout {
+  margin-bottom: 24px;
+  background-color: rgba(239, 68, 68, 0.1); /* Merah transparan */
+  color: #ef4444; /* Teks merah terang */
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  padding: 14px 20px;
+  border-radius: 12px; /* Melengkung senada dengan menu Dashboard */
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: all 0.3s ease;
+}
+
+/* Efek menyala saat disorot mouse (hover) */
+.btn-logout:hover {
+  background-color: #dc2626; /* Merah solid */
+  color: #ffffff; /* Teks berubah putih */
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+  transform: translateY(-2px); /* Efek tombol terangkat sedikit */
+}
+
+/* ==========================================
+   TOMBOL BANTUAN LOGIN (FLOATING KIRI BAWAH)
+   ========================================== */
+.floating-help-btn {
+  position: fixed;
+  bottom: 30px;
+  left: 30px;
+  background: rgba(255, 255, 255, 0.15); /* Efek transparan */
+  backdrop-filter: blur(10px); /* Efek kaca (glassmorphism) */
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #ffffff;
+  padding: 10px 20px;
+  border-radius: 30px;
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+  z-index: 50;
+}
+
+.floating-help-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+/* ==========================================
+   UI MODERN UNTUK FORM MODAL
+   ========================================== */
+
+/* 1. Mempercantik Label Teks */
+.modal-box label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #475569;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: block;
+  margin-bottom: 6px;
+  margin-top: 12px;
+}
+
+/* 2. Mempercantik Kotak Input & Dropdown */
+.modal-box input, 
+.modal-box select {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px; /* Sudut lebih membulat */
+  background-color: #f8fafc; /* Warna latar sedikit abu-abu */
+  font-size: 14px;
+  color: #1e293b;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
+
+/* 3. Efek Menyala (Glow) saat Input diklik / aktif */
+.modal-box input:focus, 
+.modal-box select:focus {
+  border-color: #6366f1;
+  background-color: #ffffff;
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15); /* Efek cahaya biru */
+  outline: none;
+}
+
+/* 4. Mempercantik Tombol Simpan (Submit) */
+.modal-box button[type="submit"] {
+  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); /* Warna gradasi premium */
+  border: none;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  border-radius: 10px;
+  padding: 14px;
+  margin-top: 24px;
+  width: 100%;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+/* Efek tombol melayang saat disorot */
+.modal-box button[type="submit"]:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(99, 102, 241, 0.4);
 }
