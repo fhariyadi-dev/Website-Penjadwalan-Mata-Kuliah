@@ -16,6 +16,28 @@
   <!-- HALAMAN LOGIN -->
 <!-- HALAMAN LOGIN -->
   <section id="loginPage" class="login-page">
+    <!-- TOMBOL BANTUAN (POJOK KIRI BAWAH) -->
+    <button id="helpBtn" class="floating-help-btn" onclick="openHelpModal()">
+      <span style="font-size: 16px;">🎧</span> Bantuan
+    </button>
+
+    <!-- MODAL PUSAT BANTUAN LOGIN -->
+    <div id="loginHelpModal" class="modal hidden" style="z-index: 200;">
+      <div class="modal-box" style="max-width: 400px; text-align: center; padding: 40px 30px;">
+        <div style="font-size: 48px; margin-bottom: 15px;">💬</div>
+        <h3 style="font-size: 20px; font-weight: 700; color: #0f172a; margin-bottom: 10px;">Pusat Bantuan</h3>
+        <p style="color: #64748b; font-size: 14px; margin-bottom: 20px;">
+          Jika Anda adalah <b>Dosen</b> atau <b>Mahasiswa</b> yang belum memiliki akun, lupa password, atau terkendala akses, silakan hubungi Administrator:
+        </p>
+        
+        <div style="background: #f1f5f9; padding: 16px; border-radius: 12px; margin-bottom: 30px; text-align: left; border: 1px solid #e2e8f0;">
+          <p style="margin: 0; font-size: 14px; color: #334155;">📧 <b>Email:</b> admin@edusched.com</p>
+          <p style="margin: 10px 0 0 0; font-size: 14px; color: #334155;">📞 <b>WhatsApp:</b> +62 812-3456-7890</p>
+        </div>
+        
+        <button class="btn primary" style="width: 100%;" onclick="closeHelpModal()">Tutup</button>
+      </div>
+    </div>
     <div class="login-card">
       <div class="login-logo">🎓</div>
       <h1>EduSched</h1>
@@ -23,12 +45,12 @@
 
       <form id="loginForm">
         <label>Username</label>
-        <input type="text" id="username" placeholder="Masukkan username" required>
+        <input type="text" id="username" placeholder="Username" required>
 
         <label>Password</label>
-        <input type="password" id="password" placeholder="Masukkan password" required>
+        <input type="password" id="password" placeholder="Password" required>
 
-        <button type="submit" class="btn primary full">Masuk</button>
+        <button type="submit" class="btn primary full">Login</button>
       </form>
 
       <p id="loginMessage" class="message"></p>
@@ -48,13 +70,13 @@
 
       <nav id="menu"></nav>
 
-      <button id="logoutButton" class="logout-button">
-        🚪 Sign Out
-      </button>
+  <button id="logoutButton" class="btn-logout">
+  🚪 Sign Out
+</button>
     </aside>
 
     <main class="main-content">
-      <<header class="topbar">
+      <header class="topbar">
         <!-- Tambahan div untuk membungkus tombol toggle dan judul -->
         <div style="display: flex; align-items: center; gap: 16px;">
           <button id="sidebarToggle" class="sidebar-toggle">☰</button>
