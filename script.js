@@ -730,7 +730,7 @@ function renderTablePage(page) {
     departments: { title: "Jurusan", button: "Tambah Jurusan", headers: ["Nama Jurusan"], rows: item => [item.name] },
     programs: { title: "Program Studi", button: "Tambah Program Studi", headers: ["Nama Program Studi"], rows: item => [item.name] },
     lecturers: { title: "Dosen", button: "Tambah Dosen", headers: ["Nama Dosen", "NIDN", "Mata Kuliah"], rows: item => [item.name, item.nidn, item.course || "-"] },
-    students: { title: "Mahasiswa", button: "Tambah Mahasiswa", headers: ["Nama Lengkap", "NIM", "Program Studi"], rows: item => [item.name, item.nim, item.program] },
+    students: { title: "Mahasiswa", button: "", headers: ["Nama Lengkap", "NIM", "Program Studi"], rows: item => [item.name, item.nim, item.program] },
     users: { title: "Manajemen User", button: "Tambah User", headers: ["Nama", "Username", "Role", "NIM/NIDN"], rows: item => [item.name, item.username, item.role, item.nim || "-"] },
     courses: { title: "Mata Kuliah", button: "Tambah Mata Kuliah", headers: ["Mata Kuliah", "Kode", "SKS", "Semester"], rows: item => [item.name, item.code, item.sks, item.semester || "1"] },
     classes: { title: "Kelas", button: "Tambah Kelas", headers: ["Nama Kelas", "Mata Kuliah"], rows: item => [item.name, item.course] },
@@ -782,14 +782,13 @@ function renderTablePage(page) {
 
   // GENERATE HTML HALAMAN KESELURUHAN DENGAN UI PREMIUM
   let html = `
+  // Ganti bagian div class="page-head" menjadi seperti ini:
     <div class="page-head" style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 28px;">
       <div>
         <h3 style="margin:0; font-size:26px; color:#0f172a; font-weight: 800; letter-spacing: -0.5px;">${conf.title}</h3>
         <p style="margin:6px 0 0; color:#64748b; font-size:15px;">Kelola data ${conf.title.toLowerCase()} pada sistem akademik.</p>
       </div>
-      <button class="btn primary" style="background: linear-gradient(135deg, #6366f1, #4f46e5); border:none; box-shadow: 0 4px 12px rgba(99,102,241,0.3); padding: 12px 20px; border-radius: 12px; font-weight: 600; font-size: 14px; color: white; cursor:pointer; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(99,102,241,0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(99,102,241,0.3)'" onclick="openForm('${page}')">
-        + ${conf.button}
-      </button>
+      ${conf.button ? `<button class="btn primary" style="background: linear-gradient(135deg, #6366f1, #4f46e5); border:none; box-shadow: 0 4px 12px rgba(99,102,241,0.3); padding: 12px 20px; border-radius: 12px; font-weight: 600; font-size: 14px; color: white; cursor:pointer; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(99,102,241,0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(99,102,241,0.3)'" onclick="openForm('${page}')">+ ${conf.button}</button>` : `<div></div>`}
     </div>
     
     ${filterHTML}
@@ -1293,9 +1292,40 @@ function submitForm(event) {
   if (currentFormType === "courses") {
     data.sks = Number(data.sks);
   }
+  
   if (currentFormType === "users") {
     data.username = data.username.trim(); 
+    
+    // ==========================================
+    // LOGIKA AUTO-SYNC AKUN BARU KE DATA MASTER
+    // ==========================================
+    if (data.role === "mahasiswa") {
+      if (!db.students) db.students = [];
+      // Cek agar tidak ada NIM ganda di master mahasiswa
+      const existingStudent = db.students.find(s => s.nim === data.nim);
+      if (!existingStudent) {
+        db.students.push({
+          id: createId('students'),
+          name: data.name,
+          nim: data.nim,
+          program: "Belum Ditentukan" // Default prodi
+        });
+      }
+    } else if (data.role === "dosen") {
+      if (!db.lecturers) db.lecturers = [];
+      // Cek agar tidak ada NIDN ganda di master dosen
+      const existingDosen = db.lecturers.find(d => d.nidn === data.nim);
+      if (!existingDosen) {
+        db.lecturers.push({
+          id: createId('lecturers'),
+          name: data.name,
+          nidn: data.nim, // Input NIM di form digunakan sebagai NIDN untuk dosen
+          course: "-"
+        });
+      }
+    }
   }
+
   if (currentFormType === "krs") {
     data.student = currentUser.name;
     data.nim = currentUser.nim || "";
