@@ -1091,33 +1091,49 @@ const MASTER_CURRICULUM = [
 ];
 
 /* FORM UTAMA */
-/* FORM UTAMA */
+/* ==========================================
+   FUNGSI BUKA FORM (SAFE & CLEAN VERSION)
+   ========================================== */
+// ==========================================
+// FUNGSI BUKA FORM (SAFE & CLEAN VERSION)
+// ==========================================
 function openForm(type) {
   const allowed = {
     departments: ["admin"], programs: ["admin"], lecturers: ["admin"], students: ["admin"],
     courses: ["admin"], classes: ["admin"], users: ["admin"], schedules: ["admin"],
     grades: ["admin", "dosen"], materials: ["dosen"], announcements: ["admin"], krs: ["mahasiswa"]
   };
-  if (!allowed[type]?.includes(currentUser.role)) return showToast("Anda tidak memiliki akses.");
+  
+  // Pengaman akses
+  if (!allowed[type]?.includes(currentUser?.role)) {
+    return showToast("Anda tidak memiliki akses.");
+  }
   
   currentFormType = type;
+  
+  // PENGAMAN: Mencegah error jika data di database masih kosong (undefined)
+  const safePrograms = db.programs || [];
+  const safeStudents = db.students || [];
+  const safeCourses = db.courses || [];
+  
   const formMap = {
     departments: { title: "Tambah Jurusan", fields: [["name", "Nama Jurusan", "text"]] },
     programs: { title: "Tambah Program Studi", fields: [["name", "Nama Program Studi", "text"]] },
     lecturers: { title: "Tambah Dosen", fields: [["name", "Nama Dosen", "text"], ["nidn", "NIDN", "text"], ["semester_filter", "Pilih Semester", "select", ["1", "2", "3", "4", "5", "6", "7", "8"]], ["course", "Mata Kuliah", "select", []]] },
-    students: { title: "Tambah Mahasiswa", fields: [["name", "Nama Lengkap", "text"], ["nim", "NIM", "text"], ["program", "Program Studi", "select", db.programs.length ? db.programs.map(p => p.name) : ["Belum ada data Program Studi"]]] },
+    students: { title: "Tambah Mahasiswa", fields: [["name", "Nama Lengkap", "text"], ["nim", "NIM", "text"], ["program", "Program Studi", "select", safePrograms.length ? safePrograms.map(p => p.name) : ["Belum ada data Program Studi"]]] },
     users: { title: "Tambah User", fields: [["name", "Nama Lengkap", "text"], ["username", "Username", "text"], ["password", "Password", "password"], ["nim", "NIM / NIDN (Kosongkan jika Admin)", "text"], ["role", "Role", "select", ["admin", "dosen", "mahasiswa"]]] },
     announcements: { title: "Tambah Pengumuman", fields: [["title", "Judul Pengumuman", "text"], ["content", "Isi Pengumuman", "text"]] },
     courses: { title: "Tambah Mata Kuliah", fields: [["semester_filter", "Pilih Semester", "select", ["1", "2", "3", "4", "5", "6", "7", "8"]], ["name", "Nama Mata Kuliah", "select", []], ["code", "Kode Mata Kuliah", "text"], ["sks", "Jumlah SKS", "number"]] },
     classes: { title: "Tambah Kelas", fields: [["name", "Nama Kelas (Contoh: IF-4A)", "text"], ["semester_filter", "Pilih Semester", "select", ["1", "2", "3", "4", "5", "6", "7", "8"]], ["course", "Mata Kuliah", "select", []]] },
     schedules: { title: "Tambah Jadwal", fields: [["semester_filter", "Pilih Semester", "select", ["1", "2", "3", "4", "5", "6", "7", "8"]], ["course", "Mata Kuliah", "select", []], ["day", "Hari", "select", ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"]], ["time", "Waktu (Contoh: 08:00 - 10:30)", "text"], ["room", "Ruangan", "text"]] },
-    grades: { title: "Input Nilai", fields: [["student_data", "Pilih Mahasiswa", "select", db.students.length ? db.students.map(s => `${s.name} - ${s.nim}`) : ["Belum ada data mahasiswa"]], ["semester_filter", "Pilih Semester", "select", ["1", "2", "3", "4", "5", "6", "7", "8"]], ["course", "Mata Kuliah", "select", []], ["score", "Nilai", "number"]] },
+    grades: { title: "Input Nilai", fields: [["student_data", "Pilih Mahasiswa", "select", safeStudents.length ? safeStudents.map(s => `${s.name} - ${s.nim}`) : ["Belum ada data mahasiswa"]], ["semester_filter", "Pilih Semester", "select", ["1", "2", "3", "4", "5", "6", "7", "8"]], ["course", "Mata Kuliah", "select", []], ["score", "Nilai", "number"]] },
     materials: { title: "Tambah Materi", fields: [["title", "Judul Materi", "text"], ["semester_filter", "Pilih Semester", "select", ["1", "2", "3", "4", "5", "6", "7", "8"]], ["course", "Mata Kuliah", "select", []]] },
     krs: { title: "Tambah KRS", fields: [["semester_filter", "Pilih Semester", "select", ["1", "2", "3", "4", "5", "6", "7", "8"]], ["course", "Mata Kuliah", "select", []]] }
   };
 
   const selected = formMap[type];
   document.getElementById("modalTitle").textContent = selected.title;
+  
   document.getElementById("formFields").innerHTML = selected.fields.map(field => {
     const [name, label, inputType, options] = field;
     if (inputType === "select") {
@@ -1144,7 +1160,8 @@ function openForm(type) {
 
       const updateMasterCourses = () => {
         const sem = semFilter.value;
-        const filtered = MASTER_CURRICULUM.filter(c => c.semester === sem);
+        const masterData = (typeof MASTER_CURRICULUM !== 'undefined') ? MASTER_CURRICULUM : [];
+        const filtered = masterData.filter(c => c.semester === sem);
         nameSelect.innerHTML = filtered.map(c => `<option value="${c.name}" data-code="${c.code}" data-sks="${c.sks}">${c.name}</option>`).join("");
         fillCourseDetails(); 
       };
@@ -1164,7 +1181,7 @@ function openForm(type) {
   }
 
   // ==========================================
-  // 2. LOGIKA DROPDOWN DINAMIS FORM LAINNYA (TERMASUK KRS)
+  // 2. LOGIKA DROPDOWN DINAMIS FORM LAINNYA
   // ==========================================
   const semesterFilter = document.querySelector('select[name="semester_filter"]');
   const courseSelect = document.querySelector('select[name="course"]');
@@ -1172,7 +1189,7 @@ function openForm(type) {
   if (semesterFilter && courseSelect && type !== 'courses') {
     const updateCourses = () => {
       const selectedSem = semesterFilter.value;
-      const filteredCourses = db.courses.filter(c => (c.semester || "1") === selectedSem);
+      const filteredCourses = safeCourses.filter(c => (c.semester || "1") === selectedSem);
       
       if (filteredCourses.length > 0) {
         courseSelect.innerHTML = filteredCourses.map(c => {
@@ -1182,7 +1199,7 @@ function openForm(type) {
           return `<option value="${c.name}">${c.name}</option>`;
         }).join("");
       } else {
-        courseSelect.innerHTML = `<option value="Belum ada data mata kuliah">Belum ada MK yang dibuka Admin di Semester ${selectedSem}</option>`;
+        courseSelect.innerHTML = `<option value="">Belum ada MK di Semester ${selectedSem}</option>`;
       }
     };
     
