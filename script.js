@@ -5,10 +5,10 @@
 // ==========================================
 const firebaseConfig = {
   apiKey: "AIzaSyA5svW_GZ6bCIhewmrk8TXMDuJ1CekWFKc",
-  authDomain: "tonvault-248cb.firebaseapp.com",
-  databaseURL: "https://tonvault-248cb-default-rtdb.firebaseio.com",
-  projectId: "tonvault-248cb",
-  storageBucket: "tonvault-248cb.firebasestorage.app",
+  authDomain: "-",
+  databaseURL: "-",
+  projectId: "-",
+  storageBucket: "-",
   messagingSenderId: "984871958367",
   appId: "1:984871958367:web:6d1dd5c10e4006a59de8ea",
   measurementId: "G-YRRRZQR0QH"
