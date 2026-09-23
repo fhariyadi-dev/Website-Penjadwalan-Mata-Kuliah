@@ -14,16 +14,9 @@ const firebaseConfig = {
   measurementId: "G-YRRRZQR0QH"
 };
 
-let dbFirebase = null;
-try {
-  if (typeof firebase !== 'undefined' && !firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
-    dbFirebase = firebase.database();
-    console.log("🟢 FIREBASE CONNECTED: EduSched tersinkronisasi online.");
-  }
-} catch (e) {
-  console.warn("⚠️ FIREBASE ERROR: Menggunakan penyimpanan lokal.");
-}
+-
+  DATABASE ERROR / MATI SEMENTARA
+-
 
 const SESSION_KEY = "edusched_session_v1";
 
